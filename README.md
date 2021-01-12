@@ -1,6 +1,6 @@
-# CP Compiler
+# CPC, CP Compiler
 
-CPC is a compiler for **cp**.
+CPC is the compiler for **cp**.
 
 ## Build
 
