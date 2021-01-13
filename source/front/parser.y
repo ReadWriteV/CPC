@@ -1,4 +1,4 @@
-%require "3.1.7"
+%require "3.2"
 %language "c++"
 %skeleton "lalr1.cc"
 
