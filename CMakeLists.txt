@@ -14,5 +14,6 @@ find_package(BISON REQUIRED)
 
 include_directories(include ${FLEX_INCLUDE_DIRS})
 include_directories(include/front)
+include_directories(${CMAKE_BINARY_DIR}/source/front)
 
 add_subdirectory(source)
