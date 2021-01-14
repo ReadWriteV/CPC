@@ -14,8 +14,10 @@ namespace CPC
         Scanner() = default;
         Scanner(std::istream &arg_yyin, std::ostream &arg_yyout) : yyFlexLexer(arg_yyin, arg_yyout) {}
         virtual CPC::Parser::symbol_type nextToken();
+        virtual ~Scanner() {}
 
-        virtual ~Scanner() { std::cout << "scanner destroyed" << std::endl; }
+    private:
+        CPC::location loc;
     };
 } // namespace CPC
 

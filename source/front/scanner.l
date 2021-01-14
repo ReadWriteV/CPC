@@ -4,24 +4,64 @@
 #include <iostream>
 #include "scanner.h"
 
-CPC::location loc;
-
 #define YY_USER_ACTION  loc.columns(yyleng);
 #define yyterminate() CPC::Parser::make_YYEOF(loc);
 %}
 
-INT (0|[1-9][0-9]*)
+%x COMMENT
 
 %%
+
+%{
+  loc.step();
+%}
 
 "+" {return CPC::Parser::make_ADD(loc);}
 "-" {return CPC::Parser::make_SUB(loc);}
 "*" {return CPC::Parser::make_MUL(loc);}
 "/" {return CPC::Parser::make_DIV(loc);}
 
-{INT} {return CPC::Parser::make_INT(std::atoi(yytext), loc);} 
 
-\n {return CPC::Parser::make_EOL(loc);}
+"=" {return CPC::Parser::make_ASSIN(loc);}
+"," {return CPC::Parser::make_COMMA(loc);}
+";" {return CPC::Parser::make_SEMICOLON(loc);}
+"[]" {return CPC::Parser::make_ARRAY(loc);}
 
-. { std::cout << "unknown partten" << std::endl; return CPC::Parser::make_YYerror(loc);}
+\( {return CPC::Parser::make_LPARENTHESE(loc);}
+\) {return CPC::Parser::make_RPARENTHESE(loc);}
+\[ {return CPC::Parser::make_LBRACKET(loc);}
+\] {return CPC::Parser::make_RBRACKET(loc);}
+\{ {return CPC::Parser::make_LBRACE(loc);}
+\} {return CPC::Parser::make_RBRACE(loc);}
+
+void {return CPC::Parser::make_VOID(loc);}
+int {return CPC::Parser::make_INT(loc);}
+float {return CPC::Parser::make_FLOAT(loc);}
+string {return CPC::Parser::make_STRING(loc);}
+
+if {return CPC::Parser::make_IF(loc);}
+else {return CPC::Parser::make_ELSE(loc);}
+while {return CPC::Parser::make_WHILE(loc);}
+return {return CPC::Parser::make_RETURN(loc);}
+import {return CPC::Parser::make_IMPORT(loc);}
+sizeof {return CPC::Parser::make_SIZEOF(loc);}
+
+
+0|[1-9][0-9]* {return CPC::Parser::make_INTEGER(std::atoi(yytext), loc);} 
+[0-9]+\.[0-9]* {return CPC::Parser::make_FLOATPOINT(std::atof(yytext), loc);}
+[_a-zA-Z][_a-zA-Z0-9]* {return CPC::Parser::make_ID(yytext, loc);}
+\"[^"]\" {return CPC::Parser::make_STR(yytext, loc);}
+
+[ \t] {loc.step();}
+\n {loc.lines(1); loc.step();}
+
+"/*" {BEGIN(COMMENT);}
+<COMMENT>\n {loc.lines(1); loc.step();}
+<COMMENT>. {loc.step();}
+<COMMENT><<EOF>> {std::cout << "unterminated comment" << std::endl; return CPC::Parser::make_YYerror(loc);}
+<COMMENT>"*/" {BEGIN(INITIAL); loc.step();}
+
+. {std::cout << "unknown partten" << std::endl; return CPC::Parser::make_YYerror(loc);}
+
+<<EOF>>  {std::cout << "end of file" << std::endl; return CPC::Parser::make_YYEOF(loc);}
 %%
