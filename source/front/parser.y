@@ -39,21 +39,26 @@
   }
 }
 
-%token <int> INTEGER
-%token <float> FLOATPOINT
-%token <std::string> ID STR
+%left ADD
+%left SUB
+%left MUL
+%left DIV
 
-%token ASSIN COMMA SEMICOLON ARRAY
+%token ASSIN
+
+%token LT LTE GT GTE EQ NEQ
+
+%token POINT COMMA SEMICOLON ARRAY
 
 %token LPARENTHESE RPARENTHESE LBRACKET RBRACKET LBRACE RBRACE
 
-%token VOID INT FLOAT STRING
+%token VOID INT FLOAT STR
+
 %token IF ELSE WHILE RETURN IMPORT SIZEOF
 
-%left ADD "+"
-%left SUB "-"
-%left MUL "*"
-%left DIV "/"
+%token <int> INTEGER
+%token <float> FLOATPOINT
+%token <std::string> ID STRING
 
 %start program
 
@@ -78,13 +83,17 @@ var_declaration: type_specifier ID SEMICOLON { std::cout << "var_declaration" <<
 type_specifier: VOID { std::cout << "type_specifier VOID" << std::endl; }
   | INT { std::cout << "type_specifier INT" << std::endl; }
   | FLOAT { std::cout << "type_specifier FLOAT" << std::endl; }
-  | STRING { std::cout << "type_specifier STRING" << std::endl; }
+  | STR { std::cout << "type_specifier STR" << std::endl; }
   ;
 
 fun_declaration : type_specifier ID LPARENTHESE params RPARENTHESE compound_stmt { std::cout << "fun_declaration" << std::endl; }
   ;
 
-import_declaration: IMPORT ID SEMICOLON { std::cout << "import_declaration" << std::endl; }
+import_declaration: IMPORT modules SEMICOLON { std::cout << "import_declaration" << std::endl; }
+;
+
+modules: modules POINT ID
+| ID
 ;
 
 params: param_list
@@ -140,7 +149,16 @@ var:ID
 |ID LBRACKET expression RBRACKET
 ;
 
-simple_expression:additive_expression
+simple_expression:additive_expression relop additive_expression
+|additive_expression
+;
+
+relop:LT
+|LTE
+|GT
+|GTE
+|EQ
+|NEQ
 ;
 
 additive_expression:additive_expression addop term
@@ -174,7 +192,7 @@ integer:INTEGER { std::cout << $1 << std::endl; }
 float:FLOATPOINT { std::cout << $1 << std::endl; }
 ;
 
-str: STR { std::cout << $1 << std::endl; }
+str: STRING { std::cout << $1 << std::endl; }
 ;
 
 call: ID LPARENTHESE args RPARENTHESE
