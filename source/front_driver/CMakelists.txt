@@ -3,6 +3,4 @@ BISON_TARGET(parser parser.y ${CMAKE_CURRENT_BINARY_DIR}/parser.cpp)
 
 ADD_FLEX_BISON_DEPENDENCY(scanner parser)
 
-add_library(front STATIC
-        ${BISON_parser_OUTPUTS}
-        ${FLEX_scanner_OUTPUTS})
+add_library(front_driver STATIC driver.cpp ${BISON_parser_OUTPUTS} ${FLEX_scanner_OUTPUTS})

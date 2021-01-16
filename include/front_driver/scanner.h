@@ -4,6 +4,7 @@
 #include <FlexLexer.h>
 #endif
 
+#include "driver.h"
 #include "parser.hpp"
 
 namespace CPC
@@ -11,13 +12,12 @@ namespace CPC
     class Scanner : public yyFlexLexer
     {
     public:
-        Scanner() = default;
-        Scanner(std::istream &arg_yyin, std::ostream &arg_yyout) : yyFlexLexer(arg_yyin, arg_yyout) {}
-        virtual CPC::Parser::symbol_type nextToken();
+        Scanner();
+        virtual Parser::symbol_type nextToken();
         virtual ~Scanner() {}
 
     private:
-        CPC::location loc;
+        location loc;
     };
 } // namespace CPC
 

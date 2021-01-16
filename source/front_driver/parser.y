@@ -14,8 +14,8 @@
 %define parse.error detailed
 %define parse.lac full
 
-%lex-param {CPC::Scanner &scanner}
-%parse-param {CPC::Scanner &scanner}
+%lex-param {CPC::Driver &driver}
+%parse-param {CPC::Driver &driver}
 
 
 %defines
@@ -28,14 +28,20 @@
     namespace CPC {
         class Scanner;
         class Parser;
+        class AST;
+        class Driver;
     }
 }
 
 %code top
 {
+  #include "node.h"
+  #include "ast.h"
+
+  #include "driver.h"
   #include "scanner.h"
-  CPC::Parser::symbol_type yylex(CPC::Scanner& scanner){
-    return scanner.nextToken();
+  CPC::Parser::symbol_type yylex(CPC::Driver &driver){
+    return driver.scanner.nextToken();
   }
 }
 
@@ -60,15 +66,17 @@
 %token <float> FLOATPOINT
 %token <std::string> ID STRING
 
+%nterm <CPC::AST *> program
+
 %start program
 
 %%
 
-program: declaration_list { std::cout << "program" << std::endl; }
+program: declaration_list { $$ = new CPC::AST(driver.getFileName()); $$->print(); }
     ;
 
 declaration_list: declaration_list declaration { std::cout << "declaration_list" << std::endl; }
-  | declaration { std::cout << "declaration_list" << std::endl; }
+  | declaration { }
   ;
 
 declaration: var_declaration { std::cout << "declaration" << std::endl; }

@@ -16,19 +16,22 @@ namespace CPC
          * @brief Construct a new Node object
          * 
          */
-        Node();
+        Node() {}
 
         /**
          * @brief Destroy the Node object
          * 
          */
-        virtual ~Node();
+        virtual ~Node() {}
 
         /**
-         * @brief display the Node, output to std::cout
+         * @brief display the Node, print to std::cout
          * 
          */
-        void dump();
+        void print()
+        {
+            dump(std::cout);
+        }
 
         /**
          * @brief display the Node, output to target stream
@@ -42,6 +45,6 @@ namespace CPC
          * 
          * @return the location of the Node 
          */
-        virtual const CPC::location &getLocation() const = 0;
+        virtual const location &getLocation() const = 0;
     };
 } // namespace CPC

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.19.2)
+cmake_minimum_required(VERSION 3.0)
 
 project(CPC)
 
@@ -11,9 +11,14 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
 find_package(FLEX REQUIRED)
 find_package(BISON REQUIRED)
+# find_package(LLVM REQUIRED CONFIG)
 
-include_directories(include ${FLEX_INCLUDE_DIRS})
-include_directories(include/front)
-include_directories(${CMAKE_BINARY_DIR}/source/front)
+include_directories(
+    include
+    include/front_driver
+    include/syntax_tree
+    ${FLEX_INCLUDE_DIRS}
+    ${CMAKE_BINARY_DIR}/source/front_driver
+    )
 
 add_subdirectory(source)
