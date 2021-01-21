@@ -22,8 +22,11 @@ namespace CPC
         {
             return fileName;
         }
-        void parse();
+        Parser::symbol_type scan()
+        {
+            return scanner.nextToken();
+        }
 
-        friend class Parser;
+        void parse();
     };
 } // namespace CPC

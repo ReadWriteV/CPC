@@ -23,14 +23,14 @@
 
 %code requires
 {
-    #include <iostream>
-    #include <string>
-    namespace CPC {
-        class Scanner;
-        class Parser;
-        class AST;
-        class Driver;
-    }
+  #include <iostream>
+  #include <string>
+  namespace CPC {
+      class Scanner;
+      class Parser;
+      class AST;
+      class Driver;
+  }
 }
 
 %code top
@@ -41,7 +41,7 @@
   #include "driver.h"
   #include "scanner.h"
   CPC::Parser::symbol_type yylex(CPC::Driver &driver){
-    return driver.scanner.nextToken();
+    return driver.scan();
   }
 }
 
@@ -68,36 +68,37 @@
 
 %nterm <CPC::AST *> program
 
+
 %start program
 
 %%
 
-program: declaration_list { $$ = new CPC::AST(driver.getFileName()); $$->print(); }
+program: declaration_list { $$ = new CPC::AST(driver.getFileName()); }
     ;
 
-declaration_list: declaration_list declaration { std::cout << "declaration_list" << std::endl; }
+declaration_list: declaration_list declaration
   | declaration { }
   ;
 
-declaration: var_declaration { std::cout << "declaration" << std::endl; }
-  | fun_declaration { std::cout << "declaration" << std::endl; }
-  | import_declaration { std::cout << "declaration" << std::endl; }
+declaration: var_declaration
+  | fun_declaration
+  | import_declaration
   ;
 
-var_declaration: type_specifier ID SEMICOLON { std::cout << "var_declaration" << std::endl; }
-  | type_specifier ID LBRACKET INTEGER RBRACKET SEMICOLON { std::cout << "var_declaration" << std::endl; }
+var_declaration: type_specifier ID SEMICOLON
+  | type_specifier ID LBRACKET INTEGER RBRACKET SEMICOLON
   ;
 
-type_specifier: VOID { std::cout << "type_specifier VOID" << std::endl; }
-  | INT { std::cout << "type_specifier INT" << std::endl; }
-  | FLOAT { std::cout << "type_specifier FLOAT" << std::endl; }
-  | STR { std::cout << "type_specifier STR" << std::endl; }
+type_specifier: VOID
+  | INT
+  | FLOAT
+  | STR
   ;
 
-fun_declaration : type_specifier ID LPARENTHESE params RPARENTHESE compound_stmt { std::cout << "fun_declaration" << std::endl; }
+fun_declaration : type_specifier ID LPARENTHESE params RPARENTHESE compound_stmt
   ;
 
-import_declaration: IMPORT modules SEMICOLON { std::cout << "import_declaration" << std::endl; }
+import_declaration: IMPORT modules SEMICOLON
 ;
 
 modules: modules POINT ID
@@ -193,14 +194,14 @@ factor: LPARENTHESE expression RPARENTHESE
 |str
 ;
 
-integer:INTEGER { std::cout << $1 << std::endl; }
+integer:INTEGER
 | SIZEOF LPARENTHESE type_specifier RPARENTHESE
 ;
 
-float:FLOATPOINT { std::cout << $1 << std::endl; }
+float:FLOATPOINT
 ;
 
-str: STRING { std::cout << $1 << std::endl; }
+str: STRING
 ;
 
 call: ID LPARENTHESE args RPARENTHESE

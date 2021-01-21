@@ -17,7 +17,7 @@ namespace CPC
          * @brief Construct a new AST object
          * 
          */
-        AST();
+        AST() {}
 
         /**
          * @brief Construct a new AST object
@@ -30,7 +30,7 @@ namespace CPC
          * @brief Destroy the AST object
          * 
          */
-        ~AST();
+        ~AST() {}
 
         /**
          * @brief display the Node, output to target stream
