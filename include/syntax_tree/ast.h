@@ -37,7 +37,7 @@ namespace CPC
          * 
          * @param out target stream to output the Node
          */
-        virtual void dump(std::ostream &out) override final
+        virtual void dump(std::ostream &out) const override final
         {
             out << "<<AST>> "
                 << "(" << sourceName << ")" << std::endl;

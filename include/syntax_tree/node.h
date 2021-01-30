@@ -38,7 +38,7 @@ namespace CPC
          * 
          * @param out target stream to output the Node
          */
-        virtual void dump(std::ostream &out) = 0;
+        virtual void dump(std::ostream &out) const = 0;
 
         /**
          * @brief Get the Location object

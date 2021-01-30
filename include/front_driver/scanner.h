@@ -35,6 +35,10 @@ namespace CPC
         ~Scanner() {}
 
     private:
+        /**
+         * @brief location information of token
+         * 
+         */
         location loc;
     };
 } // namespace CPC

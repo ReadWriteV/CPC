@@ -13,8 +13,22 @@ namespace CPC
     class Driver
     {
     private:
+        /**
+         * @brief Scanner
+         * 
+         */
         Scanner scanner;
+
+        /**
+         * @brief Parser
+         * 
+         */
         Parser parser;
+
+        /**
+         * @brief name of file to scan and parse
+         * 
+         */
         std::string fileName;
 
     public:
