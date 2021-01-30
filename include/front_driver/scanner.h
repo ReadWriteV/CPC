@@ -8,12 +8,31 @@
 
 namespace CPC
 {
+    /**
+     * @brief Scanning file to get tokens
+     * 
+     */
     class Scanner : public yyFlexLexer
     {
     public:
+        /**
+         * @brief Construct a new Scanner object
+         * 
+         */
         Scanner() = default;
-        virtual Parser::symbol_type nextToken();
-        virtual ~Scanner() {}
+
+        /**
+         * @brief get next token
+         * 
+         * @return Parser::symbol_type Next token
+         */
+        Parser::symbol_type nextToken();
+
+        /**
+         * @brief Destroy the Scanner object
+         * 
+         */
+        ~Scanner() {}
 
     private:
         location loc;
