@@ -2,7 +2,9 @@
 
 #include "scanner.h"
 #include "parser.hpp"
+#include "ast.h"
 #include <string>
+#include <memory>
 
 namespace CPC
 {
@@ -12,38 +14,13 @@ namespace CPC
      */
     class Driver
     {
-    private:
-        /**
-         * @brief Scanner
-         * 
-         */
-        Scanner scanner;
-
-        /**
-         * @brief Parser
-         * 
-         */
-        Parser parser;
-
-        /**
-         * @brief name of file to scan and parse
-         * 
-         */
-        std::string fileName;
-
     public:
-        /**
-         * @brief Construct a new Driver object
-         * 
-         */
-        Driver() = delete;
-
         /**
          * @brief Construct a new Driver object
          * 
          * @param fileName Name of the file to scan and parse
          */
-        Driver(std::string fileName) : scanner(), parser(*this), fileName(fileName) {}
+        Driver(const std::string &fileName) : scanner(), parser(*this), fileName(fileName) {}
 
         /**
          * @brief Destroy the Driver object
@@ -56,7 +33,7 @@ namespace CPC
          * 
          * @return std::string File Name
          */
-        std::string getFileName() const
+        const std::string &getFileName() const
         {
             return fileName;
         }
@@ -66,7 +43,7 @@ namespace CPC
          * 
          * @return Parser::symbol_type Next token
          */
-        Parser::symbol_type scan()
+        CPC::Parser::symbol_type scan()
         {
             return scanner.nextToken();
         }
@@ -75,6 +52,17 @@ namespace CPC
          * @brief parse the given file
          * 
          */
-        void parse();
+        std::unique_ptr<CPC::AST> parse();
+
+        void setAST(std::unique_ptr<CPC::AST> ast)
+        {
+            this->ast = std::move(ast);
+        }
+
+    private:
+        CPC::Scanner scanner;
+        CPC::Parser parser;
+        std::string fileName;
+        std::unique_ptr<CPC::AST> ast;
     };
 } // namespace CPC

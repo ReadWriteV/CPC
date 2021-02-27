@@ -1,5 +1,5 @@
 #include <iostream>
-#include <fstream>
+#include <memory>
 #include "driver.h"
 
 int main(int argc, char **argv)
@@ -10,6 +10,6 @@ int main(int argc, char **argv)
         return 0;
     }
     CPC::Driver driver(argv[1]);
-    driver.parse();
+    auto ast = driver.parse();
     return 0;
 }

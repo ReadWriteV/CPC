@@ -2,7 +2,10 @@
 
 #include "node.h"
 #include "location.hh"
+#include "declaration_node.h"
 #include <string>
+#include <vector>
+#include <memory>
 
 namespace CPC
 {
@@ -16,15 +19,9 @@ namespace CPC
         /**
          * @brief Construct a new AST object
          * 
-         */
-        AST() {}
-
-        /**
-         * @brief Construct a new AST object
-         * 
          * @param s Name of the source file
          */
-        AST(std::string fileName) : sourceName(fileName) {}
+        AST(const std::string &fileName, const CPC::location &location, std::unique_ptr<DeclarationNode> declaration_list) : sourceName(fileName), Node(location), declaration_list(std::move(declaration_list)) {}
 
         /**
          * @brief Destroy the AST object
@@ -32,34 +29,9 @@ namespace CPC
          */
         ~AST() {}
 
-        /**
-         * @brief display the Node, output to target stream
-         * 
-         * @param out target stream to output the Node
-         */
-        virtual void dump(std::ostream &out) const override final
-        {
-            out << "<<AST>> "
-                << "(" << sourceName << ")" << std::endl;
-        }
-
-        virtual const location &getLocation() const override final
-        {
-            return location;
-        }
-
     private:
-        /**
-         * @brief location of the node
-         * 
-         */
-        location location;
-
-        /**
-         * @brief source file name of the syntax tree
-         * 
-         */
         std::string sourceName;
+        std::unique_ptr<DeclarationNode> declaration_list;
     };
 
 } // namespace CPC

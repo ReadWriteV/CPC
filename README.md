@@ -1,6 +1,6 @@
 # CPC, CP Compiler
 
-CPC is the compiler for **cp**.
+CPC is the compiler for [**cp**](./doc/CP.md).
 
 ## Build
 
@@ -12,7 +12,7 @@ cd build
 
 cmake ..
 
-nmake
+cmake --build .
 ```
 
 ## Usage

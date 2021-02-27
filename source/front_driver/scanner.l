@@ -1,7 +1,6 @@
 %option noyywrap nodefault nounput noinput c++ yyclass="Scanner"
 
 %{
-#include <iostream>
 #include "scanner.h"
 
 #define YY_USER_ACTION  loc.columns(yyleng);
@@ -65,10 +64,10 @@ sizeof {return CPC::Parser::make_SIZEOF(loc);}
 "/*" {BEGIN(COMMENT);}
 <COMMENT>\n {loc.lines(1); loc.step();}
 <COMMENT>. {loc.step();}
-<COMMENT><<EOF>> {std::cout << "unterminated comment" << std::endl; return CPC::Parser::make_YYerror(loc);}
+<COMMENT><<EOF>> {return CPC::Parser::make_YYerror(loc);}
 <COMMENT>"*/" {BEGIN(INITIAL); loc.step();}
 
-. {std::cout << "unknown partten" << std::endl; return CPC::Parser::make_YYerror(loc);}
+. {return CPC::Parser::make_YYerror(loc);}
 
 <<EOF>>  {return CPC::Parser::make_YYEOF(loc);}
 %%

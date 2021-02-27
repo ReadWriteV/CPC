@@ -30,6 +30,8 @@
       class Parser;
       class AST;
       class Driver;
+      class DeclarationNode;
+      class ImportNode;
   }
 }
 
@@ -37,6 +39,8 @@
 {
   #include "node.h"
   #include "ast.h"
+  #include "import_node.h"
+
 
   #include "driver.h"
   #include "scanner.h"
@@ -66,23 +70,24 @@
 %token <float> FLOATPOINT
 %token <std::string> ID STRING
 
-%nterm <CPC::AST *> program
+%nterm <std::unique_ptr<CPC::DeclarationNode>> declaration_list declaration
 
+%nterm <std::unique_ptr<CPC::ImportNode>> import_declaration module
 
 %start program
 
 %%
 
-program: declaration_list { $$ = new CPC::AST(driver.getFileName()); }
-    ;
+program: declaration_list { auto temp = std::make_unique<CPC::AST>(driver.getFileName(), @$, $1); driver.setAST(temp); }
+  ;
 
-declaration_list: declaration_list declaration
-  | declaration { }
+declaration_list: declaration_list declaration { $$ = std::move($1); $$->addDeclaration($2); }
+  | declaration { $$ = std::move($1); }
   ;
 
 declaration: var_declaration
   | fun_declaration
-  | import_declaration
+  | import_declaration { $$ = std::make_unique<CPC::DeclarationNode>(std::move($1), @1); }
   ;
 
 var_declaration: type_specifier ID SEMICOLON
@@ -98,11 +103,11 @@ type_specifier: VOID
 fun_declaration : type_specifier ID LPARENTHESE params RPARENTHESE compound_stmt
   ;
 
-import_declaration: IMPORT modules SEMICOLON
+import_declaration: IMPORT module SEMICOLON { $$ = std::move($2); }
 ;
 
-modules: modules POINT ID
-| ID
+module: module POINT ID { $$ = std::move($1); $$->addSubName($3); }
+| ID { $$ = std::make_unique<CPC::ImportNode>($1, @1); }
 ;
 
 params: param_list

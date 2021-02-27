@@ -15,8 +15,9 @@ namespace CPC
         /**
          * @brief Construct a new Node object
          * 
+         * @param location the location (line, clomun) of the node
          */
-        Node() {}
+        Node(const CPC::location &location) : location(location){};
 
         /**
          * @brief Destroy the Node object
@@ -24,27 +25,7 @@ namespace CPC
          */
         virtual ~Node() {}
 
-        /**
-         * @brief display the Node, print to std::cout
-         * 
-         */
-        void print()
-        {
-            dump(std::cout);
-        }
-
-        /**
-         * @brief display the Node, output to target stream
-         * 
-         * @param out target stream to output the Node
-         */
-        virtual void dump(std::ostream &out) const = 0;
-
-        /**
-         * @brief Get the Location object
-         * 
-         * @return the location of the Node 
-         */
-        virtual const location &getLocation() const = 0;
+    private:
+        CPC::location location;
     };
 } // namespace CPC
